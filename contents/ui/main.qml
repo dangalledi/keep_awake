@@ -12,7 +12,9 @@ PlasmoidItem {
     // kde-inhibit holds the inhibition for as long as the child command runs.
     // "sleep infinity" keeps it alive until we disconnect the source (which kills it).
     readonly property string inhibitCmd: "kde-inhibit --power --screenSaver sleep infinity"
-    readonly property url coffeeIcon: Qt.resolvedUrl("../icons/coffee.svg")
+    readonly property url coffeeOnIcon: Qt.resolvedUrl("../icons/coffee-on.svg")
+    readonly property url coffeeOffIcon: Qt.resolvedUrl("../icons/coffee-off.svg")
+    readonly property url coffeeIcon: awake ? coffeeOnIcon : coffeeOffIcon
 
     preferredRepresentation: compactRepresentation
     Plasmoid.icon: coffeeIcon
@@ -42,6 +44,18 @@ PlasmoidItem {
         }
     }
 
+    fullRepresentation: Rectangle {
+        color: "steelblue"
+        implicitWidth: 200
+        implicitHeight: 100
+
+        Text {
+            anchors.centerIn: parent
+            text: "KEEP AWAKE OK"
+            color: "white"
+        }
+    }
+
     compactRepresentation: MouseArea {
         id: compactRoot
         hoverEnabled: true
@@ -52,17 +66,12 @@ PlasmoidItem {
         Layout.minimumHeight: Kirigami.Units.iconSizes.small
         implicitWidth: Kirigami.Units.iconSizes.large
         implicitHeight: Kirigami.Units.iconSizes.large
-
-        Kirigami.Icon {
-            anchors.fill: parent
-            source: root.coffeeIcon
-            // coffee.svg uses currentColor, so Kirigami recolors it via `color`
-            // (no isMask: grabbed/painted reliably and adapts to light/dark panels).
-            // Always full opacity so it stays clearly visible on the panel; the
-            // active/inactive state is shown by color (accent vs text color).
-            color: root.awake ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
-            opacity: compactRoot.containsMouse && !root.awake ? 0.8 : 1.0
-        }
+	
+	Kirigami.Icon {
+ 	   anchors.fill: parent
+   	   source: root.coffeeIcon
+ 	}
+	
     }
 
     // The global shortcut fires the applet's activated() signal; route it to toggle().
